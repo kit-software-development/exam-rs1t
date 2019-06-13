@@ -43,7 +43,7 @@ namespace CryptoWallet
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<CryptoWalletDbContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString:Postgres"]);
+                options.UseNpgsql(Configuration["ConnectionString:CryptoWalletDbContext"]);
             });
         }
     }
