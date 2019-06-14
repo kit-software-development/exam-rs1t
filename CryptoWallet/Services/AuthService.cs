@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using CryptoWallet.Database;
 using CryptoWallet.Database.Entities;
+using CryptoWallet.Model.Exceptions;
 using CryptoWallet.Model.Requests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +29,17 @@ namespace CryptoWallet.Services
 
         public async Task<ClaimsPrincipal> LoginUser(LoginRequest request)
         {
+            const string userNotFoundMessage = "User not found";
+
             var user = await _db.Users.Where(u => u.Email == request.Email).FirstOrDefaultAsync();
+            if (user == null)
+                throw new AuthException(userNotFoundMessage);
 
             var passwordHasher = new PasswordHasher<User>();
             var verificationResult = passwordHasher.VerifyHashedPassword(null, user.Password, request.Password);
 
             if (verificationResult != PasswordVerificationResult.Success)
-                throw new Exception();
+                throw new AuthException(userNotFoundMessage);
 
             var claims = new List<Claim>
             {
@@ -51,7 +56,7 @@ namespace CryptoWallet.Services
         {
             var user = await _db.Users.Where(u => u.Email == request.Email).FirstOrDefaultAsync();
             if (user != null)
-                throw new Exception();
+                throw new AuthException("User already exists");
 
             var hashedPassword = new PasswordHasher<User>().HashPassword(null, request.Password);
             _db.Users.Add(new User

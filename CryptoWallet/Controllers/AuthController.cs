@@ -1,5 +1,7 @@
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CryptoWallet.Model.Exceptions;
 using CryptoWallet.Model.Requests;
 using CryptoWallet.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -19,16 +21,32 @@ namespace CryptoWallet.Controllers
         }
 
         [HttpPost("sign-in")]
-        public async Task SignIn([FromBody] LoginRequest request)
+        public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
         {
-            var id = await _authService.LoginUser(request);
-            await HttpContext.SignInAsync(new ClaimsPrincipal(id));
+            try
+            {
+                var id = await _authService.LoginUser(request);
+                await HttpContext.SignInAsync(new ClaimsPrincipal(id));
+                return Ok();
+            }
+            catch (AuthException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("sign-up")]
-        public async Task SignUp([FromBody] RegisterRequest request)
+        public async Task<IActionResult> SignUp([FromBody] RegisterRequest request)
         {
-            await _authService.RegisterUser(request);
+            try
+            {
+                await _authService.RegisterUser(request);
+                return Ok();
+            }
+            catch (AuthException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [Authorize]
