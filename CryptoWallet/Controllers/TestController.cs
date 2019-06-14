@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NBitcoin;
 
 namespace CryptoWallet.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TestController : ControllerBase
+    [Authorize]
+    public class TestController : MyControllerBase
     {
         [HttpGet("address")]
         public ActionResult<string> Get(int id)

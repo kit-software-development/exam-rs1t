@@ -1,6 +1,10 @@
-﻿using CryptoWallet.Database;
+﻿using System.Threading.Tasks;
+using CryptoWallet.Database;
+using CryptoWallet.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +23,17 @@ namespace CryptoWallet
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAuthService, AuthService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o =>
+                {
+                    o.Events.OnRedirectToLogin = ctx =>
+                    {
+                        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    };
+                });
             ConfigureDatabase(services);
         }
 
@@ -34,6 +48,7 @@ namespace CryptoWallet
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
