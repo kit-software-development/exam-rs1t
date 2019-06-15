@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CryptoWallet.Database;
 using CryptoWallet.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -56,8 +57,12 @@ namespace CryptoWallet
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<CryptoWalletDbContext>(options =>
             {
-                options.UseNpgsql(Configuration["ConnectionString:CryptoWalletDbContext"]);
+                options.UseNpgsql(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production"
+                    ? Configuration.GetConnectionString("MyDbConnection")
+                    : Configuration["ConnectionString:CryptoWalletDbContext"]);
             });
+
+            services.BuildServiceProvider().GetService<CryptoWalletDbContext>().Database.Migrate();
         }
     }
 }
