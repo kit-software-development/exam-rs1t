@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoWallet", "CryptoWallet\CryptoWallet.csproj", "{F5671AE5-B859-40F7-AFAC-A99A4A8882DC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoWallet", "CryptoWallet.csproj", "{F5671AE5-B859-40F7-AFAC-A99A4A8882DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
