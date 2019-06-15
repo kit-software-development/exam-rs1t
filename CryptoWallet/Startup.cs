@@ -27,30 +27,27 @@ namespace CryptoWallet
             services.AddScoped<IWalletsService, WalletsService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(o =>
-                {
-                    o.Events.OnRedirectToLogin = ctx =>
+                    .AddCookie(o =>
                     {
-                        ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return Task.CompletedTask;
-                    };
-                });
+                        o.Events.OnRedirectToLogin = ctx =>
+                        {
+                            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            return Task.CompletedTask;
+                        };
+                    });
             ConfigureDatabase(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
-            {
                 app.UseHsts();
-            }
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseFileServer();
             app.UseMvc();
         }
 
