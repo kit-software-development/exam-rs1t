@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CryptoWallet.Database;
+using CryptoWallet.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CryptoWallet
 {
@@ -22,27 +21,43 @@ namespace CryptoWallet
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IWalletsService, WalletsService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(o =>
+                    {
+                        o.Events.OnRedirectToLogin = ctx =>
+                        {
+                            ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            return Task.CompletedTask;
+                        };
+                    });
+            ConfigureDatabase(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseFileServer();
             app.UseMvc();
+        }
+
+        private void ConfigureDatabase(IServiceCollection services)
+        {
+            services.AddEntityFrameworkNpgsql();
+            services.AddDbContext<CryptoWalletDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration["ConnectionString:CryptoWalletDbContext"]);
+            });
         }
     }
 }
