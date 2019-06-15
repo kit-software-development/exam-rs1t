@@ -17,8 +17,4 @@
         <PackageReference Include="QBitNinja.Client" Version="1.0.3.49" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Model\Responses" />
-    </ItemGroup>
-
 </Project>

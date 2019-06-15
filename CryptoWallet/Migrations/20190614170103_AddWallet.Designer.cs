@@ -3,15 +3,17 @@ using System;
 using CryptoWallet.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CryptoWallet.Migrations
 {
     [DbContext(typeof(CryptoWalletDbContext))]
-    partial class CryptoWalletDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190614170103_AddWallet")]
+    partial class AddWallet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,11 +28,9 @@ namespace CryptoWallet.Migrations
 
                     b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("Email")
-                        .IsRequired();
+                    b.Property<string>("Email");
 
-                    b.Property<string>("Password")
-                        .IsRequired();
+                    b.Property<string>("Password");
 
                     b.HasKey("Id");
 
@@ -47,8 +47,7 @@ namespace CryptoWallet.Migrations
 
                     b.Property<int?>("UserId");
 
-                    b.Property<string>("Wif")
-                        .IsRequired();
+                    b.Property<string>("Wif");
 
                     b.HasKey("Id");
 
