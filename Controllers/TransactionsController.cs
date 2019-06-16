@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using CryptoWallet.Model.Requests;
 using CryptoWallet.Model.Responses;
@@ -19,9 +18,13 @@ namespace CryptoWallet.Controllers
         }
 
         [HttpGet]
-        public async Task<WalletAddressesResponse> GetTransactions()
+        public async Task<TransactionHistoryResponse> GetTransactions()
         {
-            throw new NotImplementedException();
+            var transactionHistory = await _transactionsService.GetTransactions(User.Identity.Name);
+            return new TransactionHistoryResponse
+            {
+                TransactionHistory = transactionHistory
+            };
         }
 
         [HttpPost]

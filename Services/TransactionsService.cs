@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using CryptoWallet.Database;
 using CryptoWallet.Helpers;
+using CryptoWallet.Model.Responses;
 using Microsoft.EntityFrameworkCore;
 using NBitcoin;
 using QBitNinja.Client;
@@ -15,7 +16,7 @@ namespace CryptoWallet.Services
     public interface ITransactionsService
     {
         Task<string> Send(string email, string fromAddress, string toAddress, decimal amount, decimal fee);
-        Task<Dictionary<string, decimal>> GetTransactions(); //todo make decimal smth like a TransactionDto
+        Task<Dictionary<string, List<TransactionInfo>>> GetTransactions(string email);
     }
 
     public class TransactionsService : ITransactionsService
@@ -106,9 +107,42 @@ namespace CryptoWallet.Services
                 : broadcastResponse.Error.Reason;
         }
 
-        public async Task<Dictionary<string, decimal>> GetTransactions()
+        public async Task<Dictionary<string, List<TransactionInfo>>> GetTransactions(string email)
         {
-            throw new System.NotImplementedException();
+            var client = new QBitNinjaClient(Network.TestNet);
+
+            var user = await _db.Users.FirstOrDefaultAsync(d => d.Email == email);
+            var wifs = await _db.Wallets
+                                .Where(w => w.User.Id == user.Id)
+                                .OrderBy(w => w.CreatedAt)
+                                .Select(w => w.Wif)
+                                .ToListAsync();
+
+            var history = new Dictionary<string, List<TransactionInfo>>();
+
+            foreach (var wif in wifs)
+            {
+                var address = new BitcoinPubKeyAddress(wif.GetAddress());
+                var balanceModel = await client.GetBalance(address);
+                var transactions = new List<TransactionInfo>();
+                foreach (var operation in balanceModel.Operations)
+                {
+                    var transactionInfo = new TransactionInfo
+                    {
+                        IsSent = operation.Amount < 0,
+                        Amount = operation.Amount.ToUnit(MoneyUnit.BTC),
+                        Confirmations = operation.Confirmations,
+                        TransactionId = operation.TransactionId.ToString()
+                    };
+                    if (transactionInfo.IsSent)
+                        transactionInfo.Amount *= -1;
+                    transactions.Add(transactionInfo);
+                }
+
+                history.AddOrReplace(address.ToString(), transactions);
+            }
+
+            return history;
         }
     }
 }

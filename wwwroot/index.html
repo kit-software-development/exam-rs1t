@@ -15,7 +15,7 @@
 <div class="app">
     <div class="container">
         <nav>
-            <ul class="menu" ng-init="selectedMenuItem='send'">
+            <ul class="menu" ng-init="selectedMenuItem='history'">
                 <li><a href="#wallets" ng-click="selectedMenuItem='wallets'">Wallets</a></li>
                 <li><a href="#send" ng-click="selectedMenuItem='send'">Send</a></li>
                 <li><a href="#history" ng-click="selectedMenuItem='history'">History</a></li>
@@ -90,8 +90,33 @@
             </div>
 
             <div ng-show="selectedMenuItem === 'history'"
-                 ng-controller="HistoryController" data-ng-init="">
+                 ng-controller="HistoryController" data-ng-init="getTransactionHistory();">
                 <h1>Transaction History</h1>
+
+                <table style="width: 100%" ng-if="historyStatus === ''">
+                    <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Amount, BTC</td>
+                        <td>Confirmations</td>
+                        <td>Transaction ID</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="(address, history) in history">
+                    <tr><td colspan = "100%" style="font-weight: bold;">{{address}}</td></tr>
+                    <tr ng-repeat="transaction in history">
+                        <td>{{transaction.isSent ? "Sent" : "Received"}}</td>
+                        <td>{{transaction.amount}}</td>
+                        <td>{{transaction.confirmations}}</td>
+                        <td>{{transaction.transactionId}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <br>
+                <br>
+                <p class="centered">{{historyStatus}}</p>
+                <br>
             </div>
 
             <div ng-show="selectedMenuItem === 'auth'"

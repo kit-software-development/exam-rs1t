@@ -46,7 +46,8 @@ angular.module('index', [])
                 })
                 .catch(response => {
                     $scope.walletsStatus = "An error occured. Please try again";
-                });;
+                });
+            ;
         };
 
         $scope.send = function () {
@@ -70,7 +71,23 @@ angular.module('index', [])
     })
 
     .controller('HistoryController', function ($scope, $http) {
+        $scope.historyStatus = "";
+        $scope.history = {};
 
+        $scope.getTransactionHistory = function () {
+            $scope.historyStatus = "Loading...";
+            $http.get(`${serverUrl}/transactions`)
+                .then(response => {
+                    $scope.history = response.data.transactionHistory;
+                    if (Object.entries($scope.history).length === 0 && $scope.history.constructor === Object)
+                        $scope.historyStatus = "No history yet!";
+                    else
+                        $scope.historyStatus = "";
+                })
+                .catch(response => {
+                    $scope.historyStatus = "An error occured. Please try again";
+                });
+        };
     })
 
     .controller('AuthController', function ($scope, $http) {
