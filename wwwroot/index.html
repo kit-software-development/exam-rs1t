@@ -15,25 +15,77 @@
 <div class="app">
     <div class="container">
         <nav>
-            <ul class="menu" ng-init="selectedMenuItem='wallets'">
-                <li><a href="#" ng-click="selectedMenuItem='wallets'">Wallets</a></li>
-                <li><a href="#" ng-click="selectedMenuItem='send'">Send</a></li>
-                <li><a href="#" ng-click="selectedMenuItem='history'">History</a></li>
-                <li><a href="#" ng-click="selectedMenuItem='auth'">Auth</a></li>
+            <ul class="menu" ng-init="selectedMenuItem='send'">
+                <li><a href="#wallets" ng-click="selectedMenuItem='wallets'">Wallets</a></li>
+                <li><a href="#send" ng-click="selectedMenuItem='send'">Send</a></li>
+                <li><a href="#history" ng-click="selectedMenuItem='history'">History</a></li>
+                <li><a href="#auth" ng-click="selectedMenuItem='auth'">Auth</a></li>
             </ul>
         </nav>
         <div class="content">
             <div ng-show="selectedMenuItem === 'wallets'"
                  ng-controller="WalletsController" data-ng-init="getWalletBalances();">
-                <p>{{walletsStatus}}</p>
-                <button class="rightAligned" ng-click="createWallet()">
-                    Add Wallet
-                </button>
+                <h1>Wallets</h1><br>
+                <table style="width: 100%" ng-if="walletsStatus === ''">
+                    <thead>
+                    <tr>
+                        <td>Address</td>
+                        <td>Balance, BTC</td>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="(address, balance) in wallets">
+                        <td>{{address}}</td>
+                        <td>{{balance}}</td>
+                    </tr>
+                </table>
+
+                <br>
+                <br>
+                <p class="centered">{{walletsStatus}}</p>
+                <br>
+
+                <div class="centered">
+                    <button ng-click="createWallet()">
+                        Add Wallet
+                    </button>
+                </div>
+
             </div>
 
             <div ng-show="selectedMenuItem === 'send'"
-                 ng-controller="SendController" data-ng-init="">
-                <h1>Send</h1>
+                 ng-controller="SendController" data-ng-init="getWalletBalances();">
+                <div ng-if="walletsStatus === ''">
+                    <h1>From: </h1>
+                    <div class=sendItemWrapper>
+                        <select class="leftAligned sendItem" ng-model="$parent.selectedAddress">
+                            <option ng-selected="address == $parent.selectedAddress"
+                                    ng-repeat="(address, balance) in $parent.wallets"
+                                    ng-value="address">{{address}}
+                            </option>
+                        </select>
+                        <p style="margin: 0 20px">Available balance: </p>
+                        <p class="sendItem rightAligned">{{$parent.wallets[$parent.selectedAddress]}}</p>
+                    </div>
+                    <hr>
+                    <br>
+                    <h1>To: </h1>
+                    <div class=sendItemWrapper>
+                        <input class="leftAligned sendItem" type="text" ng-model="$parent.toAddress">
+                        <p style="margin: 0 20px">Amount: </p>
+                        <input class="rightAligned sendItem" type="number" ng-model="$parent.amount">
+                        <p style="margin: 0 20px">Fee: </p>
+                        <input class="rightAligned sendItem" type="number" ng-model="$parent.fee">
+                    </div>
+                    <hr>
+                    <br><br>
+                    <div class="centered">
+                        <button ng-click="send()">
+                            Send
+                        </button>
+                    </div>
+                </div>
+                <p class="centered">{{walletsStatus}}</p>
+                <br>
             </div>
 
             <div ng-show="selectedMenuItem === 'history'"
@@ -42,8 +94,45 @@
             </div>
 
             <div ng-show="selectedMenuItem === 'auth'"
-                 ng-controller="AuthController" data-ng-init="">
+                 ng-controller="AuthController" data-ng-init="updateIsUserAuthorized()">
                 <h1>Authorization</h1>
+                <br><br>
+
+                <div ng-show="isUserAuthorized == false">
+
+                    <div ng-if="pageType == 'login'">
+                        E-mail:<br>
+                        <input type="text" ng-model="$parent.email">
+                        <br><br>
+                        Password:<br>
+                        <input type="password" ng-model="$parent.password">
+                        <br><br>
+                        <button ng-click="signIn()">Log in</button>
+                        <br>
+                        <a href="" ng-click="togglePageType()">Go to Register</a>
+                    </div>
+
+                    <div ng-if="pageType == 'register'">
+                        E-mail:<br>
+                        <input type="text" ng-model="$parent.emailRegister">
+                        <br><br>
+                        Password:<br>
+                        <input type="password" ng-model="$parent.passwordRegister">
+                        <br><br>
+                        Confirm password:<br>
+                        <input type="password" ng-model="$parent.confirmPassword">
+                        <br><br>
+                        <button ng-click="signUp()">Register</button>
+                        <br>
+                        <a href="" ng-click="togglePageType();">Go to Sign In</a>
+                    </div>
+
+
+                </div>
+
+                <div ng-show="isUserAuthorized == true">
+                    <button ng-click="signOut()">Sign out</button>
+                </div>
             </div>
         </div>
     </div>
