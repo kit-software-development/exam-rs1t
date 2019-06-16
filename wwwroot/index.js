@@ -31,6 +31,8 @@ angular.module('index', [])
     .controller('SendController', function ($scope, $http) {
         $scope.wallets = {};
         $scope.walletsStatus = "";
+        $scope.transactionStatus = "";
+        $scope.fee = 0.0001;
 
         $scope.getWalletBalances = function () {
             $scope.walletsStatus = "Loading...";
@@ -48,10 +50,22 @@ angular.module('index', [])
         };
 
         $scope.send = function () {
-            console.log($scope.selectedAddress);
-            console.log($scope.toAddress);
-            console.log($scope.amount);
-            console.log($scope.fee);
+            $scope.transactionStatus = "Loading...";
+            $http.post(`${serverUrl}/transactions`, JSON.stringify(
+                {
+                    fromAddress: $scope.selectedAddress,
+                    toAddress: $scope.toAddress,
+                    amount: $scope.amount,
+                    fee: $scope.fee,
+                }), {withCredentials: true})
+                .then(response => {
+                    alert(response.data);
+                    $scope.transactionStatus = "";
+                })
+                .catch(reason => {
+                    alert(reason.status + " " + reason.statusText);
+                    $scope.transactionStatus = "";
+                });
         }
     })
 

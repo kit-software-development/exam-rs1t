@@ -74,14 +74,15 @@
                         <p style="margin: 0 20px">Amount: </p>
                         <input class="rightAligned sendItem" type="number" ng-model="$parent.amount">
                         <p style="margin: 0 20px">Fee: </p>
-                        <input class="rightAligned sendItem" type="number" ng-model="$parent.fee">
+                        <input class="rightAligned sendItem" type="number" ng-model="$parent.fee" onchange="this.value = this.value.replace(/,/g, '.')">
                     </div>
                     <hr>
                     <br><br>
                     <div class="centered">
-                        <button ng-click="send()">
+                        <button ng-if="transactionStatus === ''" ng-click="send()">
                             Send
                         </button>
+                        <p>{{transactionStatus}}</p>
                     </div>
                 </div>
                 <p class="centered">{{walletsStatus}}</p>

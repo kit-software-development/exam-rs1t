@@ -26,6 +26,7 @@ namespace CryptoWallet
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IWalletsService, WalletsService>();
+            services.AddScoped<ITransactionsService, TransactionsService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(o =>
