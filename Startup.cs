@@ -30,6 +30,7 @@ namespace CryptoWallet
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                     .AddCookie(o =>
                     {
+                        o.Cookie.HttpOnly = false;
                         o.Events.OnRedirectToLogin = ctx =>
                         {
                             ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -48,6 +49,7 @@ namespace CryptoWallet
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseCors(x => x.WithOrigins("http://localhost:8000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseFileServer();
             app.UseMvc();
         }
