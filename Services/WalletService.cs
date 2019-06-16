@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace CryptoWallet.Services
             {
                 User = user,
                 Wif = wif,
+                CreatedAt = DateTime.Now,
             });
             await _db.SaveChangesAsync();
 
@@ -50,6 +52,7 @@ namespace CryptoWallet.Services
 
             var addresses = await _db.Wallets
                                      .Where(w => w.User.Id == user.Id)
+                                     .OrderBy(w => w.CreatedAt)
                                      .Select(w => w.Wif.GetAddress())
                                      .ToListAsync();
 
@@ -63,6 +66,7 @@ namespace CryptoWallet.Services
             var user = await _db.Users.FirstOrDefaultAsync(d => d.Email == email);
             var wifs = await _db.Wallets
                                 .Where(w => w.User.Id == user.Id)
+                                .OrderBy(w => w.CreatedAt)
                                 .Select(w => w.Wif)
                                 .ToListAsync();
 

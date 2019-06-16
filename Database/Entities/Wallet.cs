@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,6 +16,9 @@ namespace CryptoWallet.Database.Entities
         /// </summary>
         [Required]
         public string Wif { get; set; }
+
+        [Required]
+        public DateTime CreatedAt { get; set; }
 
         public User User { get; set; }
     }
