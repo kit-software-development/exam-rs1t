@@ -13,13 +13,13 @@
 </head>
 <body>
 <div class="app">
-    <div class="container">
+    <div class="container" ng-controller="MenuController" data-ng-init="getSelectedMenuItem()">
         <nav>
-            <ul class="menu" ng-init="selectedMenuItem='history'">
-                <li><a href="#wallets" ng-click="selectedMenuItem='wallets'">Wallets</a></li>
-                <li><a href="#send" ng-click="selectedMenuItem='send'">Send</a></li>
-                <li><a href="#history" ng-click="selectedMenuItem='history'">History</a></li>
-                <li><a href="#auth" ng-click="selectedMenuItem='auth'">Auth</a></li>
+            <ul class="menu">
+                <li><a href="" ng-click="setSelectedMenuItem('wallets')">Wallets</a></li>
+                <li><a href="" ng-click="setSelectedMenuItem('send')">Send</a></li>
+                <li><a href="" ng-click="setSelectedMenuItem('history')">History</a></li>
+                <li><a href="" ng-click="setSelectedMenuItem('auth')">Auth</a></li>
             </ul>
         </nav>
         <div class="content">

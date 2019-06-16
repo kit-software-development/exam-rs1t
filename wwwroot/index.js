@@ -2,6 +2,18 @@
 const serverUrl = "https://localhost:5001/api";
 
 angular.module('index', [])
+    .controller('MenuController', function ($scope) {
+        $scope.selectedMenuItem = "";
+
+        $scope.setSelectedMenuItem = function (menuItem) {
+            $scope.selectedMenuItem = menuItem;
+            localStorage.setItem('menuItem', menuItem);
+        };
+
+        $scope.getSelectedMenuItem = function () {
+            $scope.selectedMenuItem = localStorage.getItem('menuItem');
+        }
+    })
     .controller('WalletsController', function ($scope, $http) {
         $scope.walletsStatus = "";
         $scope.wallets = {};
@@ -125,6 +137,7 @@ angular.module('index', [])
                     $scope.updateIsUserAuthorized();
                     alert("Login is successful!");
                     localStorage.setItem('email', $scope.email);
+                    location.reload();
                 })
                 .catch(reason => alert(reason.status + " " + reason.statusText));
         };
@@ -154,6 +167,7 @@ angular.module('index', [])
                 .then(response => {
                     $scope.updateIsUserAuthorized();
                     localStorage.removeItem('email');
+                    location.reload();
                 })
         };
     });
