@@ -57,10 +57,19 @@ namespace CryptoWallet
             services.AddEntityFrameworkNpgsql();
             services.AddDbContext<CryptoWalletDbContext>(options =>
             {
-                // ReSharper disable once AssignNullToNotNullAttribute
-                options.UseNpgsql(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production"
-                    ? Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_MyDbConnection")
-                    : Configuration["ConnectionString:CryptoWalletDbContext"]);
+                string connectionString;
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+                {
+                    connectionString = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_MyDbConnection");
+                    Console.WriteLine("Production " + connectionString);
+                }
+                else
+                {
+                    connectionString = Configuration["ConnectionString:CryptoWalletDbContext"];
+                    Console.WriteLine("Development " + connectionString);
+                }
+
+                options.UseNpgsql(connectionString);
             });
 
             services.BuildServiceProvider().GetService<CryptoWalletDbContext>().Database.Migrate();
