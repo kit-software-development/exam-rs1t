@@ -44,7 +44,7 @@
                 <p class="centered">{{walletsStatus}}</p>
                 <br>
 
-                <div class="centered">
+                <div class="centered" ng-if="walletsStatus === ''">
                     <button ng-click="createWallet()">
                         Add Wallet
                     </button>
