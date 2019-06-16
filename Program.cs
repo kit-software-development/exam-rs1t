@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using System.IO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace CryptoWallet
@@ -12,6 +13,7 @@ namespace CryptoWallet
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                   .UseContentRoot(Directory.GetCurrentDirectory())
                    .UseWebRoot("Frontend")
                    .UseStartup<Startup>();
     }
