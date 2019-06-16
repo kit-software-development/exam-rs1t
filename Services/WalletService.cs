@@ -5,6 +5,8 @@ using CryptoWallet.Database;
 using CryptoWallet.Database.Entities;
 using CryptoWallet.Helpers;
 using Microsoft.EntityFrameworkCore;
+using NBitcoin;
+using QBitNinja.Client;
 
 namespace CryptoWallet.Services
 {
@@ -29,8 +31,8 @@ namespace CryptoWallet.Services
             var user = await _db.Users
                                 .FirstOrDefaultAsync(d => d.Email == email);
 
-//            var privateKey = new Key();
-            var wif = "";
+            var privateKey = new Key();
+            var wif = privateKey.GetWif(Network.TestNet).ToString(); // todo add network to config
 
             _db.Wallets.Add(new Wallet
             {
@@ -39,7 +41,7 @@ namespace CryptoWallet.Services
             });
             await _db.SaveChangesAsync();
 
-            return "";
+            return privateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network.TestNet).ToString();
         }
 
         public async Task<List<string>> GetWalletAddresses(string email)
@@ -56,7 +58,7 @@ namespace CryptoWallet.Services
 
         public async Task<Dictionary<string, decimal>> GetWalletBalances(string email)
         {
-//            var client = new QBitNinjaClient(Network.TestNet);
+            var client = new QBitNinjaClient(Network.TestNet);
 
             var user = await _db.Users.FirstOrDefaultAsync(d => d.Email == email);
             var wifs = await _db.Wallets
@@ -66,12 +68,12 @@ namespace CryptoWallet.Services
 
             var balances = new Dictionary<string, decimal>();
 
-//            foreach (var wif in wifs)
-//            {
-//                var address = new BitcoinPubKeyAddress(wif.GetAddress());
-//                var balanceSummary = await client.GetBalanceSummary(address);
-//                balances.AddOrReplace(address.ToString(), balanceSummary.Spendable.Amount.ToUnit(MoneyUnit.BTC));
-//            }
+            foreach (var wif in wifs)
+            {
+                var address = new BitcoinPubKeyAddress(wif.GetAddress());
+                var balanceSummary = await client.GetBalanceSummary(address);
+                balances.AddOrReplace(address.ToString(), balanceSummary.Spendable.Amount.ToUnit(MoneyUnit.BTC));
+            }
 
             return balances;
         }

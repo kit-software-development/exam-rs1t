@@ -1,4 +1,4 @@
-//using NBitcoin;
+using NBitcoin;
 
 namespace CryptoWallet.Helpers
 {
@@ -6,7 +6,10 @@ namespace CryptoWallet.Helpers
     {
         public static string GetAddress(this string wif)
         {
-            return "wif";
+            return new BitcoinSecret(wif, Network.TestNet)
+                   .PubKey
+                   .GetAddress(ScriptPubKeyType.Legacy, Network.TestNet)
+                   .ToString();
         }
     }
 }

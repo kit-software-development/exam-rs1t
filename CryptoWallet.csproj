@@ -16,5 +16,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
+        <PackageReference Include="NBitcoin" Version="4.1.2.35" />
+        <PackageReference Include="QBitNinja.Client" Version="1.0.3.49" />
     </ItemGroup>
 </Project>
