@@ -94,14 +94,17 @@ angular.module('index', [])
         $scope.isUserAuthorized = false;
         $scope.pageType = "login";
 
-        $scope.email = "alice@mailinator.com";
-        $scope.password = "Qweqwe_1";
+        $scope.email = "";
+        $scope.password = "";
         $scope.emailRegister = "";
         $scope.passwordRegister = "";
         $scope.confirmPassword = "";
 
+        $scope.userEmail = "";
+
         $scope.updateIsUserAuthorized = function () {
             $scope.isUserAuthorized = document.cookie.indexOf('.AspNetCore.Cookies=') !== -1;
+            $scope.userEmail = localStorage.getItem('email');
         };
 
 
@@ -120,7 +123,8 @@ angular.module('index', [])
                 }), {withCredentials: true})
                 .then(response => {
                     $scope.updateIsUserAuthorized();
-                    alert("Login is successful!")
+                    alert("Login is successful!");
+                    localStorage.setItem('email', $scope.email);
                 })
                 .catch(reason => alert(reason.status + " " + reason.statusText));
         };
@@ -149,6 +153,7 @@ angular.module('index', [])
             $http.post(`${serverUrl}/auth/sign-out`)
                 .then(response => {
                     $scope.updateIsUserAuthorized();
+                    localStorage.removeItem('email');
                 })
         };
     });
