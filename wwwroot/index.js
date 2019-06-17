@@ -21,7 +21,7 @@ angular.module('index', [])
         $scope.wallets = {};
 
         $scope.getWalletBalances = function () {
-            $scope.walletsStatus = "Loading...";
+            $scope.walletsStatus = "Loading...⚡";
             $http.get(`${serverUrl}/wallets/balances`)
                 .then(response => {
                     $scope.wallets = response.data.balances;
@@ -31,7 +31,7 @@ angular.module('index', [])
                         $scope.walletsStatus = "";
                 })
                 .catch(response => {
-                    $scope.walletsStatus = "An error occured. Please try again";
+                    $scope.walletsStatus = "An error occured 🚫 Please try again";
                 });
         };
         $scope.createWallet = function () {
@@ -49,7 +49,7 @@ angular.module('index', [])
         $scope.fee = 0.0001;
 
         $scope.getWalletBalances = function () {
-            $scope.walletsStatus = "Loading...";
+            $scope.walletsStatus = "Loading...⚡";
             $http.get(`${serverUrl}/wallets/balances`)
                 .then(response => {
                     $scope.wallets = response.data.balances;
@@ -59,13 +59,13 @@ angular.module('index', [])
                         $scope.walletsStatus = "";
                 })
                 .catch(response => {
-                    $scope.walletsStatus = "An error occured. Please try again";
+                    $scope.walletsStatus = "An error occured 🚫 Please try again";
                 });
             ;
         };
 
         $scope.send = function () {
-            $scope.transactionStatus = "Loading...";
+            $scope.transactionStatus = "Loading...⚡";
             $http.post(`${serverUrl}/transactions`, JSON.stringify(
                 {
                     fromAddress: $scope.selectedAddress,
@@ -89,7 +89,7 @@ angular.module('index', [])
         $scope.history = {};
 
         $scope.getTransactionHistory = function () {
-            $scope.historyStatus = "Loading...";
+            $scope.historyStatus = "Loading...⚡";
             $http.get(`${serverUrl}/transactions`)
                 .then(response => {
                     $scope.history = response.data.transactionHistory;
@@ -99,7 +99,7 @@ angular.module('index', [])
                         $scope.historyStatus = "";
                 })
                 .catch(response => {
-                    $scope.historyStatus = "An error occured. Please try again";
+                    $scope.historyStatus = "An error occured 🚫 Please try again";
                 });
         };
     })
