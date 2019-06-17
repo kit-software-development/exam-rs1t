@@ -37,7 +37,7 @@ angular.module('index', [])
         $scope.createWallet = function () {
             $http.post(`${serverUrl}/wallets`)
                 .then(response => {
-                    $scope.getWalletBalances();
+                    $scope.wallets[response.data] = 0;
                 })
         };
     })
