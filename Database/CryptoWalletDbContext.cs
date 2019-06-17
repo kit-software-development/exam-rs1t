@@ -17,16 +17,16 @@ namespace CryptoWallet.Database
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+                        .HasIndex(u => u.Email)
+                        .IsUnique();
 
             modelBuilder.Entity<Wallet>()
-                .HasIndex(u => u.Wif)
-                .IsUnique();
+                        .HasIndex(u => u.Wif)
+                        .IsUnique();
 
             modelBuilder.Entity<Wallet>()
-                .HasOne(w => w.User)
-                .WithMany(u => u.Wallets);
+                        .HasOne(w => w.User)
+                        .WithMany(u => u.Wallets);
         }
     }
 }

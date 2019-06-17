@@ -14,7 +14,10 @@ namespace CryptoWallet.Services
 {
     public interface IAuthService
     {
+        // Authorizes user in system
         Task<ClaimsPrincipal> LoginUser(LoginRequest request);
+
+        // Performs user registration
         Task RegisterUser(RegisterRequest request);
     }
 

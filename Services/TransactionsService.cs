@@ -15,7 +15,10 @@ namespace CryptoWallet.Services
 {
     public interface ITransactionsService
     {
+        // Creates, signs and broadcasts transaction to blockchain
         Task<string> Send(string email, string fromAddress, string toAddress, decimal amount, decimal fee);
+
+        // Returns list of transactions for each of user addresses
         Task<Dictionary<string, List<TransactionInfo>>> GetTransactions(string email);
     }
 
