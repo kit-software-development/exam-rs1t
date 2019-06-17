@@ -1,5 +1,5 @@
-// const serverUrl = "https://crypto-wallet.azurewebsites.net/api/";
-const serverUrl = "https://localhost:5001/api";
+const serverUrl = "https://my-crypto-wallet.azurewebsites.net/api/";
+//const serverUrl = "https://localhost:5001/api";
 
 angular.module('index', [])
     .controller('MenuController', function ($scope) {
