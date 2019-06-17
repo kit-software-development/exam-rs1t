@@ -18,5 +18,6 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
         <PackageReference Include="NBitcoin" Version="4.1.2.35" />
         <PackageReference Include="QBitNinja.Client" Version="1.0.3.49" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     </ItemGroup>
 </Project>

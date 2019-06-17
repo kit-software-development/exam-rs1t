@@ -52,6 +52,11 @@ namespace CryptoWallet
             app.UseHttpsRedirection();
             app.UseCors(x => x.WithOrigins("http://localhost:8000").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
             app.UseFileServer();
+            app.UseSwagger()
+               .UseSwaggerUI(c =>
+               {
+                   c.SwaggerEndpoint("/swagger/v1/swagger.json", "Crypto Wallet API V1");
+               });
             app.UseMvc();
         }
 
@@ -65,8 +70,19 @@ namespace CryptoWallet
                     ? Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_MyDbConnection")
                     : Configuration["ConnectionString:CryptoWalletDbContext"]);
             });
-
             services.BuildServiceProvider().GetService<CryptoWalletDbContext>().Database.Migrate();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "Crypto Wallet HTTP API",
+                    Version = "v1",
+                    Description = "",
+                    TermsOfService = "Terms Of Service"
+                });
+            });
         }
     }
 }
