@@ -16,7 +16,7 @@
 
 * Бэкенд - `ASP.NET Core`
 * БД - `PostgreSQL` и `Entity Framework Core`
-* Фронтенд - `AngularJS`, минимально простой и без наворотов
+* Фронтенд -  максимально простой и без наворотов, на `AngularJS`
 * Библиотеки - `NBitcoin` - обертка над Bitcoin Core для .NET, `QBitNinja.Client` - .NET клиент для bitcoin block explorer-а, `Swagger` - для описания API приложения
 
 ## Запуск приложения локально
