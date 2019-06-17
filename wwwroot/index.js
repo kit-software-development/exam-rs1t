@@ -12,6 +12,8 @@ angular.module('index', [])
 
         $scope.getSelectedMenuItem = function () {
             $scope.selectedMenuItem = localStorage.getItem('menuItem');
+            if (!$scope.selectedMenuItem)
+                $scope.setSelectedMenuItem('auth');
         }
     })
     .controller('WalletsController', function ($scope, $http) {
