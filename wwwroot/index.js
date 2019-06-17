@@ -166,7 +166,8 @@ angular.module('index', [])
 
         $scope.signOut = function () {
             $http.post(`${serverUrl}/auth/sign-out`)
-                .then(response => {
+                .finally(response => {
+                    document.cookie = '.AspNetCore.Cookies=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
                     $scope.updateIsUserAuthorized();
                     localStorage.removeItem('email');
                     location.reload();
